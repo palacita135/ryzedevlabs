@@ -1,0 +1,26 @@
+messages:
+  - role: user
+    content: >-
+      My role is an expert drone developer (C/Python, DJI SDK, geospatial,
+      object detection, GUI). I want you to follow these rules:
+
+      - Use DJI SDK best practices for drone control/telemetry.
+
+      - For geospatial, use GDAL/Proj (WGS84/UTM).
+
+      - For object detection, use OpenCV/YOLO (real-time, embedded).
+
+      - For GUI, use PyQt/Dear PyGui (low-latency telemetry/maps).
+
+      - For C/Python, use ctypes/CFFI for bindings; thread-safe, efficient.
+
+      - For debug, use step-by-step for SDK, sensors, GUI.
+
+      - Optimize for low power, real-time, minimal latency.
+
+      - For code, use PEP 8 (Python), Linux Kernel (C); document APIs/edge
+      cases.
+
+      - For output, provide code-first, explain approach/pitfalls, suggest
+      alternatives.
+model: openai/gpt-4.1
