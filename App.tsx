@@ -14,7 +14,18 @@ export default function App() {
   const backgroundImage = require('./assets/background.jpeg');
 
   return (
-    <ImageBackground source={backgroundImage} style={{ flex: 1, backgroundColor: '#0f172a' }} resizeMode="contain">
+    <ImageBackground 
+      source={backgroundImage} 
+      // Change 'contain' to 'cover' to fill the screen
+      resizeMode="cover" 
+      style={{ 
+        flex: 1, 
+        width: '100%', 
+        height: '100%',
+        backgroundColor: '#0f172a' 
+      }}
+    >
+      {/* Ensure the overlay also takes up the full screen */}
       <View className="flex-1 bg-slate-900/80">
         <SafeAreaView className="flex-1">
           <Navbar activeTab={activeTab} setTab={setActiveTab} />
