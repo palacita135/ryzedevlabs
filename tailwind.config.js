@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./App.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}"],
+  // Added "./index.ts" to ensure root styling is captured
+  content: ["./App.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}", "./index.ts"],
   theme: {
     extend: {
       colors: {
@@ -12,4 +13,8 @@ module.exports = {
     },
   },
   plugins: [],
+  // This ensures NativeWind doesn't clash with standard web CSS
+  corePlugins: {
+    preflight: true, 
+  },
 }
