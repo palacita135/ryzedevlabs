@@ -1,0 +1,33 @@
+{
+  "name": "ryzedevlabs",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build": "expo export -p web && node -e \"const fs=require('fs'); fs.rmSync('build', {recursive:true, force:true}); fs.renameSync('dist', 'build'); let h=fs.readFileSync('build/index.html','utf8'); h=h.split('favicon.ico').join('favicon.png'); fs.writeFileSync('build/index.html',h);\""
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~6.1.2",
+    "expo": "~54.0.33",
+    "expo-status-bar": "~3.0.9",
+    "expo-vector-icons": "^10.0.1",
+    "nativewind": "^2.0.11",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-maps": "1.20.1",
+    "react-native-reanimated": "~4.1.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-web": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.0",
+    "babel-preset-expo": "^54.0.10",
+    "tailwindcss": "^3.3.2",
+    "typescript": "~5.9.2"
+  },
+  "private": true
+}
