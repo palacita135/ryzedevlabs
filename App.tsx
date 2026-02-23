@@ -1,6 +1,6 @@
 import './output.css';
 import React, { useState } from 'react';
-import { View, SafeAreaView, Platform, ImageBackground } from 'react-native';
+import { View, SafeAreaView, ImageBackground, StyleSheet } from 'react-native';
 import { Navbar } from './src/components/Navbar';
 import HomeScreen from './src/screens/HomeScreen';
 
@@ -14,26 +14,30 @@ export default function App() {
   const backgroundImage = require('./assets/background.jpeg');
 
   return (
-    <ImageBackground 
-      source={backgroundImage} 
-      // Change 'contain' to 'cover' to fill the screen
-      resizeMode="cover" 
-      style={{ 
-        flex: 1, 
-        width: '100%', 
-        height: '100%',
-        backgroundColor: '#0f172a' 
-      }}
-    >
-      {/* Ensure the overlay also takes up the full screen */}
-      <View className="flex-1 bg-slate-900/80">
-        <SafeAreaView className="flex-1">
-          <Navbar activeTab={activeTab} setTab={setActiveTab} />
-          <View className="flex-1">
-            {renderContent()}
-          </View>
-        </SafeAreaView>
-      </View>
-    </ImageBackground>
+    <View style={styles.container}>
+      <ImageBackground 
+        source={backgroundImage} 
+        resizeMode="cover" 
+        style={StyleSheet.absoluteFillObject}
+      >
+        <View className="flex-1 bg-slate-900/80">
+          <SafeAreaView className="flex-1">
+            <Navbar activeTab={activeTab} setTab={setActiveTab} />
+            <View className="flex-1">
+              {renderContent()}
+            </View>
+          </SafeAreaView>
+        </View>
+      </ImageBackground>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: '#0f172a',
+  }
+});
