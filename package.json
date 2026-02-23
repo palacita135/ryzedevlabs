@@ -32,3 +32,7 @@
   },
   "private": true
 }
+"scripts": {
+  "start": "expo start",
+  "build": "npx tailwindcss -i ./global.css -o ./output.css && npx expo export -p web --output-dir build && node -e \"const fs=require('fs'); let h=fs.readFileSync('build/index.html','utf8'); h=h.split('favicon.ico').join('favicon.png'); fs.writeFileSync('build/index.html',h);\""
+}
