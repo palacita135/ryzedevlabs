@@ -2,12 +2,13 @@
   "name": "ryzedevlabs",
   "version": "1.0.0",
   "main": "index.ts",
+  "homepage": "https://ryzedevlabs.com",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build": "expo export -p web && node -e \"const fs=require('fs'); fs.rmSync('build', {recursive:true, force:true}); fs.renameSync('dist', 'build'); let h=fs.readFileSync('build/index.html','utf8'); h=h.split('favicon.ico').join('favicon.png'); fs.writeFileSync('build/index.html',h);\""
+    "build": "npx expo export -p web --output-dir build && node -e \"const fs=require('fs'); let h=fs.readFileSync('build/index.html','utf8'); h=h.split('favicon.ico').join('favicon.png'); fs.writeFileSync('build/index.html',h);\""
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
