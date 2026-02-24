@@ -18,7 +18,7 @@ export default function App() {
       <ImageBackground 
         source={backgroundImage} 
         resizeMode="cover" 
-        style={StyleSheet.absoluteFillObject}
+        style={[StyleSheet.absoluteFillObject, styles.bgImage]}
       >
         <View className="flex-1 bg-slate-900/80">
           <SafeAreaView className="flex-1">
@@ -39,5 +39,9 @@ const styles = StyleSheet.create({
     width: '100vw',
     height: '100vh',
     backgroundColor: '#0f172a',
-  }
+  },
+  bgImage: {
+    width: '100%',
+    height: '100%',
+  },
 });
