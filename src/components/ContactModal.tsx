@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   Modal,
   ScrollView,
-  Linking,
   Platform,
   KeyboardAvoidingView,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -18,24 +18,55 @@ interface ContactModalProps {
   onClose: () => void;
 }
 
+type Status = 'idle' | 'sending' | 'success' | 'error';
+
 export function ContactModal({ visible, onClose }: ContactModalProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<Status>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = () => {
-    const subject = encodeURIComponent(`Website Inquiry from ${name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-    );
-    Linking.openURL(`mailto:info@ryzedevlabs.com?subject=${subject}&body=${body}`);
-    onClose();
+  const handleSubmit = async () => {
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setStatus('error');
+      setErrorMsg('Please fill in all fields.');
+      return;
+    }
+
+    setStatus('sending');
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('https://ryzedevlabs.com/send-email.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          subject: `Website Inquiry from ${name}`,
+          message,
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setStatus('success');
+      } else {
+        setStatus('error');
+        setErrorMsg(json.error || 'Something went wrong. Please try again.');
+      }
+    } catch (e) {
+      setStatus('error');
+      setErrorMsg('Network error. Please check your connection.');
+    }
   };
 
   const handleClose = () => {
     setName('');
     setEmail('');
     setMessage('');
+    setStatus('idle');
+    setErrorMsg('');
     onClose();
   };
 
@@ -46,19 +77,14 @@ export function ContactModal({ visible, onClose }: ContactModalProps) {
       animationType="fade"
       onRequestClose={handleClose}
     >
-      {/* Backdrop */}
-      <TouchableOpacity
-        style={styles.backdrop}
-        activeOpacity={1}
-        onPress={handleClose}
-      >
+      <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={handleClose}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.centeredView}
         >
-          {/* Modal Card — stop tap propagation */}
           <TouchableOpacity activeOpacity={1} onPress={() => {}}>
             <View style={styles.card}>
+
               {/* Header */}
               <View style={styles.header}>
                 <View style={styles.headerLeft}>
@@ -70,65 +96,96 @@ export function ContactModal({ visible, onClose }: ContactModalProps) {
                 </TouchableOpacity>
               </View>
 
-              <Text style={styles.subtitle}>
-                Tell us what you're building — we'll take it from there.
-              </Text>
-
-              <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Name */}
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.label}>Name</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Your name"
-                    placeholderTextColor="#475569"
-                    value={name}
-                    onChangeText={setName}
-                  />
+              {/* ── Success state ── */}
+              {status === 'success' ? (
+                <View style={styles.successBox}>
+                  <Ionicons name="checkmark-circle" size={52} color="#34d399" />
+                  <Text style={styles.successTitle}>Message sent!</Text>
+                  <Text style={styles.successSub}>
+                    We'll get back to you soon. Check your inbox for a confirmation.
+                  </Text>
+                  <TouchableOpacity style={styles.doneBtn} onPress={handleClose}>
+                    <Text style={styles.doneBtnText}>Done</Text>
+                  </TouchableOpacity>
                 </View>
+              ) : (
+                <>
+                  <Text style={styles.subtitle}>
+                    Tell us what you're building — we'll take it from there.
+                  </Text>
 
-                {/* Email */}
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.label}>Email</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="your@email.com"
-                    placeholderTextColor="#475569"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    value={email}
-                    onChangeText={setEmail}
-                  />
-                </View>
+                  <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.label}>Name</Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Your name"
+                        placeholderTextColor="#475569"
+                        value={name}
+                        onChangeText={setName}
+                        editable={status !== 'sending'}
+                      />
+                    </View>
 
-                {/* Message */}
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.label}>Message</Text>
-                  <TextInput
-                    style={[styles.input, styles.textarea]}
-                    placeholder="What are you working on?"
-                    placeholderTextColor="#475569"
-                    multiline
-                    textAlignVertical="top"
-                    value={message}
-                    onChangeText={setMessage}
-                  />
-                </View>
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.label}>Email</Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="your@email.com"
+                        placeholderTextColor="#475569"
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        value={email}
+                        onChangeText={setEmail}
+                        editable={status !== 'sending'}
+                      />
+                    </View>
 
-                {/* Submit */}
-                <TouchableOpacity
-                  style={styles.submitBtn}
-                  onPress={handleSubmit}
-                  activeOpacity={0.85}
-                >
-                  <Ionicons name="send" size={16} color="#0f172a" style={{ marginRight: 8 }} />
-                  <Text style={styles.submitText}>Send Message</Text>
-                </TouchableOpacity>
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.label}>Message</Text>
+                      <TextInput
+                        style={[styles.input, styles.textarea]}
+                        placeholder="What are you working on?"
+                        placeholderTextColor="#475569"
+                        multiline
+                        textAlignVertical="top"
+                        value={message}
+                        onChangeText={setMessage}
+                        editable={status !== 'sending'}
+                      />
+                    </View>
 
-                <Text style={styles.footer}>
-                  Opens your mail client · sent to info@ryzedevlabs.com
-                </Text>
-              </ScrollView>
+                    {/* Error */}
+                    {status === 'error' && (
+                      <View style={styles.errorBox}>
+                        <Ionicons name="alert-circle" size={16} color="#f87171" />
+                        <Text style={styles.errorText}>{errorMsg}</Text>
+                      </View>
+                    )}
+
+                    {/* Submit */}
+                    <TouchableOpacity
+                      style={[styles.submitBtn, status === 'sending' && { opacity: 0.7 }]}
+                      onPress={handleSubmit}
+                      activeOpacity={0.85}
+                      disabled={status === 'sending'}
+                    >
+                      {status === 'sending' ? (
+                        <ActivityIndicator color="#0f172a" />
+                      ) : (
+                        <>
+                          <Ionicons name="send" size={16} color="#0f172a" style={{ marginRight: 8 }} />
+                          <Text style={styles.submitText}>Send Message</Text>
+                        </>
+                      )}
+                    </TouchableOpacity>
+
+                    <Text style={styles.footer}>
+                      Sent directly to info@ryzedevlabs.com
+                    </Text>
+                  </ScrollView>
+                </>
+              )}
             </View>
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -171,13 +228,12 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
   },
   headerTitle: {
     color: '#f1f5f9',
     fontSize: 20,
     fontWeight: '700',
-    marginLeft: 6,
+    marginLeft: 8,
   },
   closeBtn: {
     width: 32,
@@ -216,6 +272,20 @@ const styles = StyleSheet.create({
     height: 110,
     paddingTop: 12,
   },
+  errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(248,113,113,0.1)',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    gap: 8,
+  },
+  errorText: {
+    color: '#f87171',
+    fontSize: 13,
+    flex: 1,
+  },
   submitBtn: {
     flexDirection: 'row',
     backgroundColor: '#34d399',
@@ -241,5 +311,35 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     marginBottom: 4,
+  },
+  // Success state
+  successBox: {
+    alignItems: 'center',
+    paddingVertical: 24,
+    gap: 12,
+  },
+  successTitle: {
+    color: '#f1f5f9',
+    fontSize: 22,
+    fontWeight: '700',
+  },
+  successSub: {
+    color: '#64748b',
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
+    paddingHorizontal: 8,
+  },
+  doneBtn: {
+    marginTop: 8,
+    backgroundColor: '#34d399',
+    borderRadius: 50,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+  },
+  doneBtnText: {
+    color: '#0f172a',
+    fontWeight: '700',
+    fontSize: 15,
   },
 });
