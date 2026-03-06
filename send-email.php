@@ -26,7 +26,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 $smtpHost = 'smtp.hostinger.com';
 $smtpPort = 465;
 $smtpUser = 'info@ryzedevlabs.com';
-$smtpPass = 'YOUR_EMAIL_PASSWORD_HERE';   // <-- replace with your actual password
+$smtpPass = '@BurgerKing135';   // <-- replace with your actual password
 $fromName = 'RyzeDev Labs';
 $toEmail  = 'info@ryzedevlabs.com';
 
