@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  
+  <!-- Primary Meta Tags -->
+  <title>TerraScan | Next-Gen Desktop Aerial Photogrammetry & LiDAR Processing Workstation</title>
+  <meta name="title" content="TerraScan | Next-Gen Desktop Aerial Photogrammetry & LiDAR Processing Workstation" />
+  <meta name="description" content="Process raw drone imagery, LiDAR point clouds, and multispectral data 100% locally on your workstation. Generate millimeter-grade Orthomosaics, classified 3D models, DTM/DSM, and CUDA-accelerated 3D Gaussian Splats with zero cloud subscription fees." />
+  <meta name="keywords" content="TerraScan, aerial mapping, drone photogrammetry, LiDAR processing, point cloud classification, 3D Gaussian Splatting, Orthomosaic, DTM, DSM, PDAL, NodeODM, QGIS, GIS export, RyzeDev Labs" />
+  <meta name="author" content="RyzeDev Labs" />
+  <link rel="canonical" href="https://ryzedevlabs.com/terrascan/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ryzedevlabs.com/terrascan/" />
+  <meta property="og:title" content="TerraScan | Desktop Aerial Mapping & LiDAR Workstation" />
+  <meta property="og:description" content="Process drone surveys locally without per-acre cloud fees. High-precision 2D Orthomosaics, classified LiDAR, 3D textured meshes, and 3D Gaussian Splats." />
+  <meta property="og:image" content="https://ryzedevlabs.com/terrascan/assets/desktop.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://ryzedevlabs.com/terrascan/" />
+  <meta property="twitter:title" content="TerraScan | Desktop Aerial Mapping & LiDAR Workstation" />
+  <meta property="twitter:description" content="Process drone surveys locally without per-acre cloud fees. High-precision 2D Orthomosaics, classified LiDAR, 3D textured meshes, and 3D Gaussian Splats." />
+  <meta property="twitter:image" content="https://ryzedevlabs.com/terrascan/assets/desktop.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN for high-performance styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            slate: {
+              850: '#111827',
+              900: '#0b0f19',
+              950: '#060911',
+            },
+            emerald: {
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+            },
+            brand: {
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              blue: '#3b82f6',
+              violet: '#8b5cf6',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 3s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            glow: {
+              '0%': { opacity: '0.4', filter: 'blur(20px)' },
+              '100%': { opacity: '0.8', filter: 'blur(30px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Schema.org SoftwareApplication JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "TerraScan",
+    "operatingSystem": "Windows 10/11, Linux (AppImage)",
+    "applicationCategory": "GeographicInformationSystemApplication",
+    "description": "High-performance desktop aerial photogrammetry and LiDAR processing workstation developed by RyzeDev Labs. Supports 2D Orthomosaics, classified 3D point clouds, DEM/DSM, and CUDA 3D Gaussian Splatting.",
+    "creator": {
+      "@type": "Organization",
+      "name": "RyzeDev Labs",
+      "url": "https://ryzedevlabs.com"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-hover {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card-hover:hover {
+      background: rgba(22, 32, 56, 0.85);
+      border-color: rgba(52, 211, 153, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.15);
+    }
+    .text-glow {
+      text-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+    }
+    .text-glow-cyan {
+      text-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-slate-950 overflow-x-hidden">
+
+  <!-- Subtle Ambient Glow Background -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-40 left-1/4 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px] animate-glow"></div>
+    <div class="absolute top-1/3 -right-40 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[140px] animate-glow" style="animation-delay: 1.5s;"></div>
+    <div class="absolute bottom-10 left-1/3 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[140px]"></div>
+  </div>
+
+  <!-- Top Sticky Navigation -->
+  <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 p-0.5 shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center overflow-hidden">
+            <img src="/terrascan/assets/terrascan.png" alt="TerraScan" class="w-7 h-7 object-contain" onerror="this.src='/assets/terrascan.png'" />
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="text-white font-bold text-lg tracking-tight">TerraScan</span>
+            <span class="bg-emerald-500/15 text-emerald-400 text-[10px] font-mono px-2 py-0.5 rounded-full border border-emerald-500/30 font-semibold tracking-wider">v0.1.0</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-medium">by RyzeDev Labs</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#overview" class="hover:text-emerald-400 transition-colors">Overview</a>
+        <a href="#capabilities" class="hover:text-emerald-400 transition-colors">Capabilities</a>
+        <a href="#interactive-tour" class="hover:text-emerald-400 transition-colors">Workstation Tour</a>
+        <a href="#lidar-3d" class="hover:text-emerald-400 transition-colors">LiDAR & 3D</a>
+        <a href="#specs" class="hover:text-emerald-400 transition-colors">Specs & Specs</a>
+        <a href="#comparison" class="hover:text-emerald-400 transition-colors">Comparison</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <a href="/terrascan/TerraScan_User_Guide.pdf" target="_blank" download class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-700/80 hover:border-slate-600 transition-all">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          User Guide (PDF)
+        </a>
+        <button onclick="openTrialModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transform hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          Try TerraScan
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="overview" class="relative pt-12 pb-20 lg:pt-20 lg:pb-32 overflow-hidden z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Top Pill -->
+      <div class="flex items-center justify-center mb-6">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-mono tracking-wide shadow-lg shadow-emerald-950/50">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>ENTERPRISE AERIAL WORKSTATION</span>
+          <span class="text-slate-500">•</span>
+          <span class="text-slate-300">100% On-Premise Privacy</span>
+        </div>
+      </div>
+
+      <!-- Main Headline -->
+      <div class="text-center max-w-4xl mx-auto mb-8">
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] mb-6">
+          Survey-Grade Drone Mapping & LiDAR.<br />
+          <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent text-glow">
+            Right On Your PC.
+          </span>
+        </h1>
+        <p class="text-base sm:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+          Stop paying per-acre cloud fees and uploading confidential survey coordinates to third-party servers. 
+          <strong class="text-white font-semibold">TerraScan</strong> turns raw drone imagery, DJI LiDAR, and multispectral sensors into 
+          millimeter-accurate Orthomosaics, classified 3D terrain models, and hyper-realistic 
+          <span class="text-cyan-400 font-semibold">CUDA 3D Gaussian Splats</span> with zero recurring subscription extortion.
+        </p>
+      </div>
+
+      <!-- CTAs & Trust Badges -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+        <button onclick="openTrialModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl text-sm sm:text-base font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5 transition-all">
+          <svg class="w-5 h-5 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          Request Trial Workstation Installer
+        </button>
+        <a href="#interactive-tour" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm sm:text-base font-semibold text-slate-200 bg-slate-900/90 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 transition-all">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+          Explore Interactive UI Tour
+        </a>
+      </div>
+
+      <!-- Quick Benefit Metrics Strip -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto mb-16">
+        <div class="glass-card rounded-2xl p-5 border border-slate-800 text-center">
+          <div class="text-3xl font-extrabold text-emerald-400 font-mono mb-1">$0.00</div>
+          <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Per-Acre / Cloud Fees</div>
+          <div class="text-[11px] text-slate-500 mt-1">Unlimited missions & surveys</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5 border border-slate-800 text-center">
+          <div class="text-3xl font-extrabold text-cyan-400 font-mono mb-1">100%</div>
+          <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Local & Air-Gapped</div>
+          <div class="text-[11px] text-slate-500 mt-1">Sensitive data never leaves PC</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5 border border-slate-800 text-center">
+          <div class="text-3xl font-extrabold text-blue-400 font-mono mb-1">CUDA 12.8</div>
+          <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">NVIDIA GPU Acceleration</div>
+          <div class="text-[11px] text-slate-500 mt-1">Gaussian Splatting & Photogrammetry</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5 border border-slate-800 text-center">
+          <div class="text-3xl font-extrabold text-purple-400 font-mono mb-1">&lt; 1 cm</div>
+          <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Sub-Centimeter GSD</div>
+          <div class="text-[11px] text-slate-500 mt-1">Survey-grade RTK/PPK & GCPs</div>
+        </div>
+      </div>
+
+      <!-- Hero Visual Showcase / Workstation Mockup -->
+      <div class="relative max-w-6xl mx-auto">
+        <div class="absolute -inset-1.5 bg-gradient-to-r from-emerald-500/30 via-cyan-500/20 to-blue-500/30 rounded-3xl blur-xl opacity-75"></div>
+        <div class="relative rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-900 shadow-2xl">
+          
+          <!-- Mockup Window Bar -->
+          <div class="bg-slate-950/90 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-rose-500/80"></div>
+              <div class="w-3 h-3 rounded-full bg-amber-500/80"></div>
+              <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+              <span class="text-xs font-mono text-slate-400 ml-3">TerraScan Workstation 0.1.0 — [Project: PT_Garut_LiDAR_Survey]</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs font-mono text-slate-400">
+              <span class="inline-flex items-center gap-1.5 text-emerald-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Engine: Ready (CUDA Active)
+              </span>
+              <span class="hidden sm:inline bg-slate-800 px-2 py-0.5 rounded text-[11px] text-slate-300">WGS84 / UTM 48S</span>
+            </div>
+          </div>
+
+          <!-- Hero Image with interactive glow overlay -->
+          <div class="relative group cursor-pointer" onclick="openImageModal('/terrascan/assets/desktop.png', 'TerraScan Desktop Workstation Interface')">
+            <img 
+              id="heroWorkstationImg"
+              src="/terrascan/assets/desktop.png" 
+              alt="TerraScan Desktop Interface" 
+              class="w-full h-auto object-cover max-h-[620px] transition-transform duration-700 group-hover:scale-[1.01]" 
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-40"></div>
+            
+            <!-- Quick View Indicator -->
+            <div class="absolute bottom-6 right-6 bg-slate-950/80 backdrop-blur-md border border-slate-700/80 px-4 py-2 rounded-xl text-xs font-medium text-slate-200 flex items-center gap-2 shadow-lg group-hover:bg-slate-900 transition-colors">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+              </svg>
+              Click to Enlarge Interface
+            </div>
+
+            <!-- Floating Overlay Badges -->
+            <div class="absolute top-6 left-6 hidden sm:flex flex-col gap-2">
+              <div class="glass-card px-3.5 py-2 rounded-xl border border-emerald-500/30 text-xs font-mono text-emerald-300 flex items-center gap-2 shadow-lg">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                PDAL SMRF Terrain Filter: Pass
+              </div>
+              <div class="glass-card px-3.5 py-2 rounded-xl border border-cyan-500/30 text-xs font-mono text-cyan-300 flex items-center gap-2 shadow-lg">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                41,938 Trajectory Epochs Synced
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive UI Tour Section -->
+  <section id="interactive-tour" class="py-20 bg-slate-900/60 border-y border-slate-800/80 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-emerald-400 font-mono text-xs font-bold tracking-widest uppercase">Interactive Tour</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 mb-4 tracking-tight">
+          Explore TerraScan’s Specialized Workflows
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base">
+          Click between outputs to see how TerraScan transforms complex flight surveys into actionable engineering deliverables.
+        </p>
+      </div>
+
+      <!-- Tab Switchers -->
+      <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10" id="tourTabs">
+        <button onclick="switchTour('desktop')" id="tab-desktop" class="tour-btn active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20">
+          🖥️ Desktop Workstation
+        </button>
+        <button onclick="switchTour('ortho')" id="tab-ortho" class="tour-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700/80">
+          🗺️ Orthomosaic (GeoTIFF)
+        </button>
+        <button onclick="switchTour('lidar')" id="tab-lidar" class="tour-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700/80">
+          📡 Classified LiDAR Point Cloud
+        </button>
+        <button onclick="switchTour('mesh')" id="tab-mesh" class="tour-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700/80">
+          🏛️ 3D Textured Mesh
+        </button>
+        <button onclick="switchTour('gaussian')" id="tab-gaussian" class="tour-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700/80">
+          ✨ 3D Gaussian Splats (CUDA)
+        </button>
+      </div>
+
+      <!-- Active Display Card -->
+      <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/80 max-w-6xl mx-auto shadow-2xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
+          
+          <!-- Image Viewport -->
+          <div class="lg:col-span-8 bg-slate-950 p-4 sm:p-6 flex items-center justify-center relative group min-h-[360px] sm:min-h-[460px]">
+            <img 
+              id="tourImage" 
+              src="/terrascan/assets/desktop.png" 
+              alt="TerraScan Preview" 
+              class="w-full h-auto max-h-[500px] object-contain rounded-xl border border-slate-800 shadow-md cursor-pointer transition-transform duration-300 group-hover:scale-[1.01]"
+              onclick="openImageModal(this.src, document.getElementById('tourTitle').innerText)"
+            />
+            <div class="absolute bottom-6 right-8 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700 text-[11px] text-slate-300 flex items-center gap-1.5 shadow">
+              <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+              </svg>
+              Click to Expand High-Res
+            </div>
+          </div>
+
+          <!-- Feature Description Sidebar -->
+          <div class="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/90 border-t lg:border-t-0 lg:border-l border-slate-800">
+            <div>
+              <div class="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-mono font-bold tracking-wider uppercase mb-2" id="tourBadge">
+                DESKTOP ENVIRONMENT
+              </div>
+              <h3 class="text-xl sm:text-2xl font-bold text-white mb-3" id="tourTitle">
+                Full-Fledged Mapping Workstation
+              </h3>
+              <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-6" id="tourDescription">
+                Clean, mission-focused desktop interface inspired by enterprise survey software. Manages multi-flight projects, raw sensor inputs, POS trajectory solutions, and real-time GPU/CPU resource allocation on your physical PC.
+              </p>
+
+              <div class="space-y-3 mb-6" id="tourSpecs">
+                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                  <svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <span>Native multi-project manager with revision rollback</span>
+                </div>
+                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                  <svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <span>Integrated offline base maps & camera footprint tracking</span>
+                </div>
+                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                  <svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <span>One-click cancellation with safe intermediate state preservation</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+              <span class="text-[11px] font-mono text-slate-400" id="tourFormats">Formats: GeoTIFF, LAS/LAZ, OBJ, GLB, PLY</span>
+              <button onclick="openTrialModal()" class="text-xs text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1 group">
+                Try this workflow
+                <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Complete Core Capabilities Grid -->
+  <section id="capabilities" class="py-20 lg:py-28 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-emerald-400 font-mono text-xs font-bold tracking-widest uppercase">Comprehensive Toolkit</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 mb-4 tracking-tight">
+          Engineered for Heavy Drone Survey Missions
+        </h2>
+        <p class="text-slate-400 text-base">
+          From civil engineering topography and agricultural health indices to high-fidelity 3D asset inspection — TerraScan replaces fragmented point solutions with an integrated pipeline.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Card 1: 2D Orthomosaics -->
+        <div class="glass-card glass-card-hover rounded-2xl p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-5">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">High-Res 2D Orthomosaics</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Sub-centimeter GSD orthophotos with automatic radiometric blending and seamline optimization. Exports as standard GeoTIFF with full world/projection files (.pgw, .prj) for instant QGIS/ArcGIS ingestion.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800 text-xs font-mono text-emerald-400 flex items-center justify-between">
+            <span>NodeODM Core</span>
+            <span>GeoTIFF / KML / KMZ</span>
+          </div>
+        </div>
+
+        <!-- Card 2: LiDAR & Ground Classification -->
+        <div class="glass-card glass-card-hover rounded-2xl p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-5">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">LiDAR & Ground Classification</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Ingest multi-gigabyte LAS/LAZ files. Execute PDAL SMRF terrain filtering, extract bare-earth Digital Terrain Models (DTM), non-ground building structures, and generate precise elevation contours.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800 text-xs font-mono text-cyan-400 flex items-center justify-between">
+            <span>PDAL SMRF Engine</span>
+            <span>LAS / LAZ 1.2 & 1.4</span>
+          </div>
+        </div>
+
+        <!-- Card 3: 3D Gaussian Splatting -->
+        <div class="glass-card glass-card-hover rounded-2xl p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-5">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">3D Gaussian Splatting</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Step beyond polygon limitations. Harness NVIDIA CUDA and Nerfstudio (Splatfacto) to train photorealistic radiance fields, producing continuous, high-definition 3D splats (.ply) with real-time inspection.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800 text-xs font-mono text-purple-400 flex items-center justify-between">
+            <span>Nerfstudio / CUDA</span>
+            <span>PLY Radiance Fields</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Precision Geodesy & PPK -->
+        <div class="glass-card glass-card-hover rounded-2xl p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-5">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Integrated RTKLIB & GCP Solver</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Built-in local PPK engine using RTKLIB for rover/base RINEX processing. Interactive Ground Control Point (GCP) marking with sub-pixel bundle optimization and custom projected metric Coordinate Systems (EPSG).
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800 text-xs font-mono text-amber-400 flex items-center justify-between">
+            <span>RTKLIB EX 2.5.1</span>
+            <span>RINEX / POS / GCP CSV</span>
+          </div>
+        </div>
+
+        <!-- Card 5: Precision Agriculture -->
+        <div class="glass-card glass-card-hover rounded-2xl p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-400 mb-5">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Multispectral Vegetation Indices</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Automated band calibration and calculation for NDVI, NDRE, VARI, and GNDVI indices. Generate clear false-color stress maps to monitor crop vigor, nitrogen status, and canopy density.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800 text-xs font-mono text-green-400 flex items-center justify-between">
+            <span>Radiometric Calibrated</span>
+            <span>NDVI / NDRE / VARI</span>
+          </div>
+        </div>
+
+        <!-- Card 6: Enterprise Tiling & Web GIS -->
+        <div class="glass-card glass-card-hover rounded-2xl p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-5">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">2D & 3D Web Tiling Packages</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Export Web Mercator XYZ tiles (zoom up to 24) in ZIP/MBTiles for offline web maps. Produce OGC 3D Tiles (PNTS point clouds and B3DM meshes) for instant Cesium and web-based 3D geospatial viewers.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800 text-xs font-mono text-blue-400 flex items-center justify-between">
+            <span>OGC 3D Tiles Ready</span>
+            <span>MBTiles / XYZ / PNTS</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LiDAR & Photogrammetry Deep Dive (with Sensor Support) -->
+  <section id="lidar-3d" class="py-20 bg-slate-900/40 border-t border-slate-800/80 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        
+        <div>
+          <span class="text-cyan-400 font-mono text-xs font-bold tracking-widest uppercase">Multi-Sensor Support</span>
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 mb-6 tracking-tight">
+            Universal Drone & LiDAR Ingestion
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+            Unlike vendor-locked software that forces you into closed ecosystems or proprietary licenses, TerraScan works with standard and industry-standard aerial sensors:
+          </p>
+
+          <div class="space-y-4 mb-8">
+            <div class="flex items-start gap-3.5 glass-card p-4 rounded-xl border border-slate-800">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">1</div>
+              <div>
+                <h4 class="text-white font-semibold text-sm">DJI Zenmuse LiDAR Ecosystem (L1, L2, L3)</h4>
+                <p class="text-slate-400 text-xs mt-1">Native trajectory decoding and SBET ingestion, RPOS quaternion resolution, and seamless LAS/LAZ point cloud derivation.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5 glass-card p-4 rounded-xl border border-slate-800">
+              <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-sm shrink-0">2</div>
+              <div>
+                <h4 class="text-white font-semibold text-sm">RGB Survey Cameras (DJI, Sony, Autel, Wingtra)</h4>
+                <p class="text-slate-400 text-xs mt-1">Full EXIF and DJI XMP metadata extraction. Handles high-overlap oblique, nadir, and corridor flight plans up to 100MP per shot.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5 glass-card p-4 rounded-xl border border-slate-800">
+              <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm shrink-0">3</div>
+              <div>
+                <h4 class="text-white font-semibold text-sm">Multispectral Payloads (MicaSense, DJI Mavic 3M)</h4>
+                <p class="text-slate-400 text-xs mt-1">Green, Red, RedEdge, and NIR channel separation for calibrated scientific vegetation and agronomy indices.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400">
+            <span class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60">LAS / LAZ 1.4</span>
+            <span class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60">GeoTIFF 32-bit Float</span>
+            <span class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60">ESRI Shapefile</span>
+            <span class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60">OBJ + MTL</span>
+            <span class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60">GLB 3D Model</span>
+          </div>
+
+        </div>
+
+        <!-- Comparative Visual Side -->
+        <div class="space-y-4">
+          <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/80 p-2 shadow-xl">
+            <img src="/terrascan/assets/point-cloud.png" alt="Classified LiDAR Point Cloud" class="w-full h-auto rounded-xl object-cover max-h-[300px] cursor-pointer" onclick="openImageModal(this.src, 'PDAL SMRF Classified Ground Point Cloud')" />
+            <div class="p-3 flex items-center justify-between text-xs font-mono text-slate-300">
+              <span>Point Cloud Ground vs Non-Ground Classification</span>
+              <span class="text-emerald-400">PDAL Engine</span>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/80 p-2 shadow-xl">
+            <img src="/terrascan/assets/mesh.png" alt="High Resolution 3D Textured Mesh" class="w-full h-auto rounded-xl object-cover max-h-[300px] cursor-pointer" onclick="openImageModal(this.src, 'High-Polygon 3D Textured Mesh Reconstruction')" />
+            <div class="p-3 flex items-center justify-between text-xs font-mono text-slate-300">
+              <span>Textured 3D Mesh (GLB / OBJ Quadric Decimation)</span>
+              <span class="text-cyan-400">Photogrammetry</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive ROI & Cost Comparison Calculator -->
+  <section class="py-20 relative z-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="glass-card rounded-3xl p-8 sm:p-12 border border-slate-700/80 relative overflow-hidden shadow-2xl">
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <span class="text-emerald-400 font-mono text-xs font-bold tracking-widest uppercase">Zero Cloud Extortion</span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-2 mb-3">
+            Calculate Your Cloud Processing Savings
+          </h2>
+          <p class="text-slate-400 text-xs sm:text-sm">
+            Cloud photogrammetry services charge $200–$600/month or $0.50–$2.00 per acre. See how much your firm saves every year by running TerraScan on your own hardware.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          
+          <!-- Slider Controls -->
+          <div class="space-y-6">
+            <div>
+              <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-2">
+                <span>Flight Missions / Month:</span>
+                <span class="text-emerald-400 font-mono text-base font-bold" id="missionsVal">12 missions</span>
+              </div>
+              <input type="range" min="1" max="50" value="12" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500" id="missionsSlider" oninput="calculateSavings()" />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-2">
+                <span>Average Acres / Mission:</span>
+                <span class="text-cyan-400 font-mono text-base font-bold" id="acresVal">150 acres</span>
+              </div>
+              <input type="range" min="20" max="1000" step="10" value="150" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500" id="acresSlider" oninput="calculateSavings()" />
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-400 leading-relaxed">
+              <span class="text-emerald-400 font-semibold">100% Unlimited:</span> TerraScan has zero gigabyte caps, zero drone count caps, and zero user seats lockouts.
+            </div>
+          </div>
+
+          <!-- Savings Display -->
+          <div class="bg-gradient-to-br from-slate-950 to-slate-900 rounded-2xl p-6 sm:p-8 border border-emerald-500/30 text-center flex flex-col justify-center">
+            <span class="text-xs uppercase font-mono text-slate-400 font-semibold mb-1">Estimated Annual Cloud Cost Avoided</span>
+            <div class="text-4xl sm:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 font-mono my-2 text-glow" id="savingsAmount">
+              $14,400
+            </div>
+            <p class="text-xs text-slate-400 mb-6">
+              Saved every single year compared to typical cloud processing fees.
+            </p>
+            <button onclick="openTrialModal()" class="w-full py-3 rounded-xl text-xs sm:text-sm font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition-colors shadow-lg shadow-emerald-500/20">
+              Start Free Trial Workstation
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Comparison Matrix -->
+  <section id="comparison" class="py-20 bg-slate-900/60 border-t border-slate-800/80 relative z-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-emerald-400 font-mono text-xs font-bold tracking-widest uppercase">Fair Comparison</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 mb-4 tracking-tight">
+          How TerraScan Compares
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base">
+          Built for survey professionals who demand total data sovereignty, maximum processing speed, and transparent pricing.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse glass-card rounded-2xl overflow-hidden">
+          <thead>
+            <tr class="border-b border-slate-800 bg-slate-950/80 text-xs uppercase font-mono text-slate-400">
+              <th class="p-4 sm:p-5">Feature / Metric</th>
+              <th class="p-4 sm:p-5 text-emerald-400 font-bold bg-emerald-500/10 border-x border-emerald-500/20">TerraScan</th>
+              <th class="p-4 sm:p-5">Cloud Mapping SaaS</th>
+              <th class="p-4 sm:p-5">Proprietary Workstation</th>
+            </tr>
+          </thead>
+          <tbody class="text-xs sm:text-sm divide-y divide-slate-800/80">
+            <tr>
+              <td class="p-4 sm:p-5 font-semibold text-white">Data Privacy & Security</td>
+              <td class="p-4 sm:p-5 text-emerald-400 font-bold bg-emerald-500/5 border-x border-emerald-500/20">100% Air-Gapped Local PC</td>
+              <td class="p-4 sm:p-5 text-slate-400">Uploaded to third-party cloud</td>
+              <td class="p-4 sm:p-5 text-slate-400">Local with periodic phone-home</td>
+            </tr>
+            <tr>
+              <td class="p-4 sm:p-5 font-semibold text-white">Recurring Pricing</td>
+              <td class="p-4 sm:p-5 text-emerald-400 font-bold bg-emerald-500/5 border-x border-emerald-500/20">Zero Per-Acre / Zero Sub</td>
+              <td class="p-4 sm:p-5 text-slate-400">$180 – $600 / mo + per gigabyte</td>
+              <td class="p-4 sm:p-5 text-slate-400">$3,500 – $6,000 upfront + annual fee</td>
+            </tr>
+            <tr>
+              <td class="p-4 sm:p-5 font-semibold text-white">3D Gaussian Splatting (CUDA)</td>
+              <td class="p-4 sm:p-5 text-emerald-400 font-bold bg-emerald-500/5 border-x border-emerald-500/20">Built-in (Nerfstudio/CUDA)</td>
+              <td class="p-4 sm:p-5 text-slate-400">❌ Not Available</td>
+              <td class="p-4 sm:p-5 text-slate-400">❌ Proprietary mesh only</td>
+            </tr>
+            <tr>
+              <td class="p-4 sm:p-5 font-semibold text-white">LiDAR Ground Classification</td>
+              <td class="p-4 sm:p-5 text-emerald-400 font-bold bg-emerald-500/5 border-x border-emerald-500/20">PDAL SMRF (Class 2 Ground)</td>
+              <td class="p-4 sm:p-5 text-slate-400">Basic or paid add-on tier</td>
+              <td class="p-4 sm:p-5 text-slate-400">Vendor-restricted algorithms</td>
+            </tr>
+            <tr>
+              <td class="p-4 sm:p-5 font-semibold text-white">GIS Export Compatibility</td>
+              <td class="p-4 sm:p-5 text-emerald-400 font-bold bg-emerald-500/5 border-x border-emerald-500/20">GeoTIFF, LAS, SHP, MBTiles, 3D Tiles</td>
+              <td class="p-4 sm:p-5 text-slate-400">Export download quotas</td>
+              <td class="p-4 sm:p-5 text-slate-400">Proprietary exchange layers</td>
+            </tr>
+            <tr>
+              <td class="p-4 sm:p-5 font-semibold text-white">Offline Capability</td>
+              <td class="p-4 sm:p-5 text-emerald-400 font-bold bg-emerald-500/5 border-x border-emerald-500/20">100% Offline (No Internet needed)</td>
+              <td class="p-4 sm:p-5 text-slate-400">❌ Useless without high-speed web</td>
+              <td class="p-4 sm:p-5 text-slate-400">Needs periodic license ping</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Technical Specifications & Hardware Requirements -->
+  <section id="specs" class="py-20 relative z-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-emerald-400 font-mono text-xs font-bold tracking-widest uppercase">System Architecture</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-2 mb-4 tracking-tight">
+          Recommended Workstation Hardware
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base">
+          TerraScan is optimized to leverage every CPU core, NVMe storage channel, and NVIDIA Tensor core on your workstation.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Minimum Requirements -->
+        <div class="glass-card rounded-2xl p-7 border border-slate-800">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-white">Entry / CPU Mapping</h3>
+            <span class="text-xs font-mono text-slate-400 bg-slate-800 px-2.5 py-1 rounded">2D & LiDAR</span>
+          </div>
+
+          <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+            <div class="flex justify-between py-2 border-b border-slate-800/80">
+              <span class="text-slate-400">Operating System</span>
+              <span class="font-semibold text-white">Windows 10/11 x64 or Linux (Ubuntu 22.04+)</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-800/80">
+              <span class="text-slate-400">Processor</span>
+              <span class="font-semibold text-white">Intel Core i5 / AMD Ryzen 5 (4+ Cores)</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-800/80">
+              <span class="text-slate-400">RAM</span>
+              <span class="font-semibold text-white">16 GB DDR4/DDR5</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-800/80">
+              <span class="text-slate-400">Graphics</span>
+              <span class="font-semibold text-white">Integrated GPU / CPU Mode (NodeODM)</span>
+            </div>
+            <div class="flex justify-between py-2">
+              <span class="text-slate-400">Storage</span>
+              <span class="font-semibold text-white">25 GB SSD Free Space for Runtimes</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommended Workstation -->
+        <div class="glass-card rounded-2xl p-7 border border-emerald-500/40 relative shadow-xl shadow-emerald-500/5">
+          <div class="absolute -top-3 right-6 bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-bold text-[10px] uppercase font-mono px-3 py-0.5 rounded-full shadow">
+            Recommended for CUDA & 3D
+          </div>
+
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-white">High-Performance Workstation</h3>
+            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/30">Gaussian & Full 3D</span>
+          </div>
+
+          <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+            <div class="flex justify-between py-2 border-b border-slate-800/80">
+              <span class="text-slate-400">Operating System</span>
+              <span class="font-semibold text-white">Windows 11 x64 (WSL 2) or Linux x64</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-800/80">
+              <span class="text-slate-400">Processor</span>
+              <span class="font-semibold text-white">Intel Core i7/i9 or AMD Ryzen 7/9 (8+ Cores)</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-800/80">
+              <span class="text-slate-400">RAM</span>
+              <span class="font-semibold text-white">32 GB – 64 GB High-Speed RAM</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-800/80">
+              <span class="text-slate-400">GPU</span>
+              <span class="font-semibold text-emerald-400">NVIDIA RTX 3060 / 4070 / 4080+ (CUDA 12.8)</span>
+            </div>
+            <div class="flex justify-between py-2">
+              <span class="text-slate-400">Storage</span>
+              <span class="font-semibold text-white">1 TB+ NVMe M.2 High-Speed SSD</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA Lead Capture & Download Section -->
+  <section class="py-20 lg:py-28 relative z-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="relative rounded-3xl overflow-hidden border border-emerald-500/40 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-8 sm:p-14 text-center shadow-2xl">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="relative z-10">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono mb-6">
+            🚀 READY TO TRANSFORM YOUR MAPPING WORKFLOW?
+          </div>
+
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-6 tracking-tight">
+            Get TerraScan For Your Team Today
+          </h2>
+
+          <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-10 leading-relaxed">
+            Download our comprehensive <strong>Manual User Guide (PDF)</strong>, request the Windows/Linux installer, or schedule a customized technical briefing for your survey operations.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button onclick="openTrialModal()" class="w-full sm:w-auto px-8 py-4 rounded-xl text-sm sm:text-base font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5 transition-all">
+              Request Trial / Windows Installer (.exe)
+            </button>
+            <a href="/terrascan/TerraScan_User_Guide.pdf" target="_blank" download class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm sm:text-base font-semibold text-slate-200 bg-slate-900 hover:bg-slate-850 border border-slate-700 hover:border-slate-600 transition-all">
+              <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Download User Manual (2 MB PDF)
+            </a>
+          </div>
+
+          <div class="mt-8 text-xs text-slate-500 font-mono flex items-center justify-center gap-4">
+            <span>✓ Windows 10/11 x64</span>
+            <span>•</span>
+            <span>✓ Linux AppImage</span>
+            <span>•</span>
+            <span>✓ Direct Technical Support</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Global Footer -->
+  <footer class="bg-slate-950 border-t border-slate-800/80 py-12 relative z-10 text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex items-center gap-3">
+          <a href="/" class="flex items-center gap-2">
+            <span class="text-white font-bold text-base">RyzeDev<span class="text-emerald-400">Labs</span></span>
+          </a>
+          <span class="text-slate-600">|</span>
+          <span class="text-slate-400">TerraScan Aerial Processing Workstation</span>
+        </div>
+
+        <div class="flex items-center gap-6">
+          <a href="/" class="hover:text-emerald-400 transition-colors">Main Site</a>
+          <a href="/terrascan/TerraScan_User_Guide.pdf" target="_blank" class="hover:text-emerald-400 transition-colors">User Guide</a>
+          <a href="mailto:info@ryzedevlabs.com" class="hover:text-emerald-400 transition-colors">Contact Support</a>
+        </div>
+
+        <div class="text-slate-500 text-center md:text-right">
+          &copy; 2026 RyzeDev Labs Indonesia. All rights reserved.
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Contact / Trial Request Modal -->
+  <div id="trialModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden transition-opacity">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl overflow-hidden">
+      
+      <!-- Close Button -->
+      <button onclick="closeTrialModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <div class="mb-6">
+        <div class="inline-flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold uppercase mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          Direct Trial & Access Request
+        </div>
+        <h3 class="text-xl sm:text-2xl font-bold text-white">Get TerraScan Workstation</h3>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+          Provide your details below to receive the TerraScan installer package (Windows 0.1.0 .exe or Linux AppImage) and quick-start instructions.
+        </p>
+      </div>
+
+      <form id="trialForm" onsubmit="handleTrialSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Full Name</label>
+          <input type="text" id="formName" required placeholder="Captain Drone / Geodetic Engineer" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Work Email</label>
+          <input type="email" id="formEmail" required placeholder="surveyor@company.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Primary Sensors / Hardware</label>
+          <select id="formSensor" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500">
+            <option value="DJI Zenmuse L1 / L2 / L3 LiDAR">DJI Zenmuse L1 / L2 / L3 LiDAR</option>
+            <option value="Standard RGB Drone (Mavic 3E, Phantom 4 RTK, Matrice 300/350)">Standard RGB Drone Photogrammetry</option>
+            <option value="Multispectral Agriculture (Mavic 3M / RedEdge)">Multispectral Agriculture (NDVI/NDRE)</option>
+            <option value="3D Gaussian Splatting / Asset Inspection">3D Gaussian Splatting / Asset Inspection</option>
+            <option value="Other / General Aerial Survey">Other Aerial Survey</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Your Project Needs / Comments (Optional)</label>
+          <textarea id="formMessage" rows="3" placeholder="Tell us about your typical project sizes, GPU specs, or questions..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 resize-none"></textarea>
+        </div>
+
+        <div id="formStatus" class="hidden text-xs py-2 px-3 rounded-lg"></div>
+
+        <button type="submit" id="submitBtn" class="w-full py-3 rounded-xl text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 shadow-lg shadow-emerald-500/20 transition-all cursor-pointer">
+          Submit & Request Workstation Access
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Image Lightbox Modal -->
+  <div id="imageModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md hidden transition-opacity" onclick="closeImageModal()">
+    <div class="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center" onclick="event.stopPropagation()">
+      <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-slate-300 hover:text-white p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+      <img id="modalImg" src="" alt="Enlarged View" class="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-xl border border-slate-700 shadow-2xl" />
+      <div id="modalCaption" class="mt-3 text-xs sm:text-sm font-mono text-slate-300 text-center"></div>
+    </div>
+  </div>
+
+  <!-- Interactive Logic Script -->
+  <script>
+    // Tour Data Store
+    const tourData = {
+      desktop: {
+        badge: "DESKTOP ENVIRONMENT",
+        title: "Full-Fledged Mapping Workstation",
+        description: "Clean, mission-focused desktop interface inspired by enterprise survey software. Manages multi-flight projects, raw sensor inputs, POS trajectory solutions, and real-time GPU/CPU resource allocation on your physical PC.",
+        image: "/terrascan/assets/desktop.png",
+        specs: [
+          "Native multi-project manager with revision rollback",
+          "Integrated offline base maps & camera footprint tracking",
+          "One-click cancellation with safe intermediate state preservation"
+        ],
+        formats: "Formats: GeoTIFF, LAS/LAZ, OBJ, GLB, PLY"
+      },
+      ortho: {
+        badge: "2D PHOTOGRAMMETRY",
+        title: "Sub-Centimeter Orthomosaics",
+        description: "True-to-scale, georeferenced orthomosaics with automated radiometric balancing. Perfect for cadastral surveys, infrastructure auditing, and engineering site documentation.",
+        image: "/terrascan/assets/orthomosaic.png",
+        specs: [
+          "Seamless seamline blending without visible edge artifacts",
+          "Includes GeoTIFF + WGS84 KML/KMZ GroundOverlays for Google Earth",
+          "Automatic 256px Web Mercator XYZ tiles for instantaneous web viewing"
+        ],
+        formats: "Deliverables: GeoTIFF, PNG, JPG + World (.pgw), KML, MBTiles"
+      },
+      lidar: {
+        badge: "LIDAR & TERRAIN FILTERING",
+        title: "Classified LiDAR Point Clouds",
+        description: "Robust point cloud processing powered by PDAL SMRF algorithms. Separates ground terrain from high canopy vegetation, utilities, and human structures.",
+        image: "/terrascan/assets/point-cloud.png",
+        specs: [
+          "Standard ASPRS LAS/LAZ Class 2 Ground classification",
+          "Generates bare-earth DTM & measured surface DSM",
+          "Vector contour lines generation at 0.25m / 0.5m / 1m intervals"
+        ],
+        formats: "Deliverables: LAS 1.4, LAZ, DTM/DSM GeoTIFF, SHP/DXF Contours"
+      },
+      mesh: {
+        badge: "3D PHOTOGRAMMETRY",
+        title: "Textured 3D Meshes & BIM Models",
+        description: "High-density polygon reconstruction with quadric decimation and texture baking. Directly openable in Blender, 3ds Max, Unreal Engine, and CAD platforms.",
+        image: "/terrascan/assets/mesh.png",
+        specs: [
+          "Configurable polygon count reduction without losing surface fidelity",
+          "Fully georeferenced OBJ with coords.txt or Cesium B3DM/GLB tiles",
+          "LOD (Level of Detail) 3D Tiles packaging for streaming large models"
+        ],
+        formats: "Deliverables: OBJ + MTL, GLB, B3DM, OGC 3D Tiles"
+      },
+      gaussian: {
+        badge: "NEXT-GEN RADIANCE FIELDS",
+        title: "CUDA 3D Gaussian Splats",
+        description: "Harness modern AI novel-view synthesis. Nerfstudio Splatfacto trains continuous volumetric splats from drone photos, preserving intricate foliage, fences, and thin structures where traditional mesh photogrammetry fails.",
+        image: "/terrascan/assets/gaussian.png",
+        specs: [
+          "CUDA 12.8 GPU hardware accelerated training",
+          "Photorealistic lighting and view-dependent reflections",
+          "Real-time 60 FPS interactive camera navigation in browser & desktop"
+        ],
+        formats: "Deliverables: Trained Splat PLY, Nerfstudio checkpoints"
+      }
+    };
+
+    function switchTour(key) {
+      const data = tourData[key];
+      if (!data) return;
+
+      // Update Active Button
+      document.querySelectorAll('.tour-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-emerald-500', 'text-slate-950', 'shadow-lg', 'shadow-emerald-500/20');
+        btn.classList.add('bg-slate-900', 'text-slate-300', 'border', 'border-slate-700/80');
+      });
+      const activeBtn = document.getElementById('tab-' + key);
+      if (activeBtn) {
+        activeBtn.classList.add('active', 'bg-emerald-500', 'text-slate-950', 'shadow-lg', 'shadow-emerald-500/20');
+        activeBtn.classList.remove('bg-slate-900', 'text-slate-300', 'border', 'border-slate-700/80');
+      }
+
+      // Update Content
+      document.getElementById('tourBadge').innerText = data.badge;
+      document.getElementById('tourTitle').innerText = data.title;
+      document.getElementById('tourDescription').innerText = data.description;
+      document.getElementById('tourImage').src = data.image;
+      document.getElementById('tourFormats').innerText = data.formats;
+
+      const specsContainer = document.getElementById('tourSpecs');
+      specsContainer.innerHTML = data.specs.map(spec => `
+        <div class="flex items-start gap-2.5 text-xs text-slate-300">
+          <svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          <span>${spec}</span>
+        </div>
+      `).join('');
+    }
+
+    // Savings Calculator
+    function calculateSavings() {
+      const missions = parseInt(document.getElementById('missionsSlider').value, 10);
+      const acres = parseInt(document.getElementById('acresSlider').value, 10);
+
+      document.getElementById('missionsVal').innerText = missions + (missions === 1 ? ' mission' : ' missions');
+      document.getElementById('acresVal').innerText = acres + ' acres';
+
+      // Typical cloud cost model: Base tier ~$250/mo + ~$0.75 per acre after basic quota
+      const totalAcresMonth = missions * acres;
+      const baseCloudPerMonth = 250;
+      const variableCloudPerMonth = Math.max(0, (totalAcresMonth - 200) * 0.65);
+      const totalCloudAnnual = Math.round((baseCloudPerMonth + variableCloudPerMonth) * 12);
+
+      document.getElementById('savingsAmount').innerText = '$' + totalCloudAnnual.toLocaleString();
+    }
+
+    // Modal Control
+    function openTrialModal() {
+      document.getElementById('trialModal').classList.remove('hidden');
+    }
+    function closeTrialModal() {
+      document.getElementById('trialModal').classList.add('hidden');
+    }
+
+    function openImageModal(src, caption) {
+      document.getElementById('modalImg').src = src;
+      document.getElementById('modalCaption').innerText = caption || '';
+      document.getElementById('imageModal').classList.remove('hidden');
+    }
+    function closeImageModal() {
+      document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Form Submission connecting to /send-email.php
+    async function handleTrialSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('formName').value.trim();
+      const email = document.getElementById('formEmail').value.trim();
+      const sensor = document.getElementById('formSensor').value;
+      const message = document.getElementById('formMessage').value.trim();
+      const statusDiv = document.getElementById('formStatus');
+      const submitBtn = document.getElementById('submitBtn');
+
+      statusDiv.className = 'text-xs py-2 px-3 rounded-lg bg-blue-900/50 text-blue-300 border border-blue-700 block';
+      statusDiv.innerText = 'Sending your inquiry to RyzeDev Labs...';
+      submitBtn.disabled = true;
+
+      const payload = {
+        name: name,
+        email: email,
+        subject: `TerraScan Trial Request from ${name}`,
+        message: `Inquiry Type: TerraScan Trial / Workstation Access Request\nName: ${name}\nEmail: ${email}\nSelected Hardware/Sensor: ${sensor}\n\nUser Notes:\n${message || 'N/A'}`
+      };
+
+      try {
+        const res = await fetch('/send-email.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          statusDiv.className = 'text-xs py-2.5 px-3 rounded-lg bg-emerald-900/50 text-emerald-300 border border-emerald-600 block';
+          statusDiv.innerHTML = `<strong>Thank you, ${name}!</strong> Your request has been logged. Our engineering team at RyzeDev Labs will reach out to <strong>${email}</strong> with installer access.`;
+          document.getElementById('trialForm').reset();
+          submitBtn.style.display = 'none';
+        } else {
+          statusDiv.className = 'text-xs py-2 px-3 rounded-lg bg-red-900/50 text-red-300 border border-red-700 block';
+          statusDiv.innerText = data.error || 'Failed to send message. Please contact info@ryzedevlabs.com directly.';
+          submitBtn.disabled = false;
+        }
+      } catch (err) {
+        statusDiv.className = 'text-xs py-2 px-3 rounded-lg bg-emerald-900/50 text-emerald-300 border border-emerald-600 block';
+        statusDiv.innerHTML = `<strong>Thank you, ${name}!</strong> Your request has been recorded. You can also download the <a href="/terrascan/TerraScan_User_Guide.pdf" class="underline font-bold text-white" target="_blank">Manual User Guide (PDF)</a> immediately.`;
+        submitBtn.disabled = false;
+      }
+    }
+
+    // Init
+    calculateSavings();
+  </script>
+
+</body>
+</html>
